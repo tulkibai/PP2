@@ -4,9 +4,7 @@ import sys
 
 pygame.init()
 
-# -------------------------------
 # Параметры экрана и общие константы
-# -------------------------------
 WIDTH, HEIGHT = 600, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Racer: Противники и монеты с весом")
@@ -27,11 +25,9 @@ OPPONENT_WIDTH, OPPONENT_HEIGHT = 50, 100
 
 # Константа для повышения скорости противников:
 # За каждые COINS_FOR_SPEED_INCREASE собранных монет скорость противников увеличивается
-COINS_FOR_SPEED_INCREASE = 10
+COINS_FOR_SPEED_INCREASE = 5
 
-# -------------------------------
 # Изображения спрайтов
-# -------------------------------
 
 # Изображение игрока – красный прямоугольник
 player_img = pygame.Surface((PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -41,9 +37,7 @@ player_img.fill(RED)
 opponent_img = pygame.Surface((OPPONENT_WIDTH, OPPONENT_HEIGHT))
 opponent_img.fill(BLUE)
 
-# -------------------------------
 # Класс игрока
-# -------------------------------
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -51,7 +45,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH // 2
         self.rect.bottom = HEIGHT - 10  # располагается снизу экрана
-        self.speed = 5
+        self.speed = 7
 
     def update(self):
         # Управление машиной с помощью стрелок влево/вправо
@@ -61,9 +55,7 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_RIGHT] and self.rect.right < WIDTH:
             self.rect.x += self.speed
 
-# -------------------------------
 # Класс противника (машины‑противника)
-# -------------------------------
 class Opponent(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -76,14 +68,12 @@ class Opponent(pygame.sprite.Sprite):
         # Рассчитываем бонус к скорости в зависимости от собранных монет
         bonus = coins_collected // COINS_FOR_SPEED_INCREASE
         # Базовая скорость от 3 до 7 плюс бонус
-        self.speed = random.randint(3, 7) + bonus
+        self.speed = random.randint(10, 20) + bonus
 
     def update(self):
         self.rect.y += self.speed  # движение вниз
 
-# -------------------------------
 # Класс монеты
-# -------------------------------
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -103,9 +93,7 @@ class Coin(pygame.sprite.Sprite):
     def update(self):
         self.rect.y += self.speed
 
-# -------------------------------
 # Группы спрайтов
-# -------------------------------
 all_sprites = pygame.sprite.Group()
 opponents = pygame.sprite.Group()
 coins = pygame.sprite.Group()
@@ -113,29 +101,23 @@ coins = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
 
-# -------------------------------
 # Переменные для счета
-# -------------------------------
 # Счет за успешно избегнутых противников (проезд мимо игрока)
 score = 0
 # Общее количество собранных монет (с учетом веса монет)
 coins_collected = 0
 
-# -------------------------------
 # Таймеры для спавна противников и монет
-# -------------------------------
 opponent_timer = 0
-opponent_spawn_interval = 90  # примерно каждые 1.5 сек при 60 FPS
+opponent_spawn_interval = 27  # примерно каждые 0.42 сек при 60 FPS
 
 coin_timer = 0
-coin_spawn_interval = 120  # примерно каждые 2 сек при 60 FPS
+coin_spawn_interval = 60  # примерно каждые 1 сек при 60 FPS
 
 # Шрифт для отображения текста
 font = pygame.font.SysFont(None, 36)
 
-# -------------------------------
 # Основной игровой цикл
-# -------------------------------
 running = True
 while running:
     clock.tick(FPS)
@@ -181,9 +163,7 @@ while running:
             score += 1  # увеличиваем счет за избегание
             opp.kill()
 
-    # -------------------------------
     # Отрисовка фона и спрайтов
-    # -------------------------------
     screen.fill(GRAY)
     all_sprites.draw(screen)
 
